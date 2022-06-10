@@ -1,6 +1,6 @@
-$primary-color: white;
-$bg: black;
-h1 {
-  color: $primary-color;
-  background-color: $bg;
+html, body {
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  place-items: center;
 }
