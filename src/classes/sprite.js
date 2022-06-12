@@ -17,9 +17,9 @@ export class Sprite {
     this.tickCount += 1;
     this.position.y += this.velocity.y;
     this.position.x += this.velocity.x;
-    // if (this.gravity && this.speed && (this.position.y < innerHeight - (this.height * this.scale))) {
-    //   this.position.y += this.speed * this.gravity;
-    // }
+    if (this.gravity) {
+      this.velocity.y += this.gravity;
+    }
     if (this.tickCount > this.ticksPerFrame) {
       this.tickCount = 0;
       if (this.frameIndex < this.frames - 1) {

@@ -5,7 +5,10 @@ import playerIdleRight from "./assets/playerIdleRight.png";
 import playerIdleLeft from "./assets/playerIdleLeft.png";
 import playerRunRight from "./assets/playerRunRight.png";
 import playerRunLeft from "./assets/playerRunLeft.png";
-import playerJump from "./assets/playerJump.png";
+import playerJumpRight from "./assets/playerJumpRight.png";
+import playerJumpLeft from "./assets/playerJumpLeft.png";
+import playerFallRight from "./assets/playerFallRight.png";
+import playerFallLeft from "./assets/playerFallLeft.png";
 
 let count = 0;
 const images = {};
@@ -22,7 +25,10 @@ const init = () => {
   add('playerIdleLeft', playerIdleLeft);
   add('playerRunRight', playerRunRight);
   add('playerRunLeft', playerRunLeft);
-  add('playerJump', playerJump);
+  add('playerJumpRight', playerJumpRight);
+  add('playerJumpLeft', playerJumpLeft);
+  add('playerFallRight', playerFallRight);
+  add('playerFallLeft', playerFallLeft);
 }
 
 window.addEventListener("load", () => {

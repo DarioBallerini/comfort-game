@@ -3,11 +3,19 @@ import { Sprite } from '../../classes/sprite';
 const sprites = {
   run: {
     frames: 13,
-    ticksPerFrame: 1
+    ticksPerFrame: 1.5
   },
   idle: {
     frames: 21,
-    ticksPerFrame: 2
+    ticksPerFrame: 1.5
+  },
+  jump: {
+    frames: 11,
+    ticksPerFrame: 1.5
+  },
+  fall: {
+    frames: 11,
+    ticksPerFrame: 1.5
   }
 }
 
@@ -26,11 +34,14 @@ export class Player extends Sprite {
       ticksPerFrame: sprites.idle.ticksPerFrame,
       gravity: gravity
     })
-    this.idleImageRight = images.playerIdleRight;
-    this.idleImageLeft = images.playerIdleLeft;
+    this.idleRightImage = images.playerIdleRight;
+    this.idleLeftImage = images.playerIdleLeft;
     this.runRightImage = images.playerRunRight;
-    this.runRightLeft = images.playerRunLeft;
-    this.jumpImage = images.playerJump;
+    this.runLeftImage = images.playerRunLeft;
+    this.jumpRightImage = images.playerJumpRight;
+    this.jumpLeftImage = images.playerJumpLeft;
+    this.fallRightImage = images.playerFallRight;
+    this.fallLeftImage = images.playerFallLeft;
     this.position = {
       x: 150,
       y: 0
@@ -40,8 +51,8 @@ export class Player extends Sprite {
       y: 0
     }
     this.speed = speed;
-
     this.lastDirection;
+    this.isColliding = false;
   }
 
   run = (lastDirection) => {
@@ -55,9 +66,9 @@ export class Player extends Sprite {
         this.width = this.currentSprite.width / this.frames;
       }
     } else {
-      if (this.currentSprite !== this.runRightLeft) {
+      if (this.currentSprite !== this.runLeftImage) {
         this.lastDirection = 'left';
-        this.currentSprite = this.runRightLeft;
+        this.currentSprite = this.runLeftImage;
         this.frameIndex = 0;
         this.frames = sprites.run.frames;
         this.ticksPerFrame = sprites.run.ticksPerFrame;
@@ -68,16 +79,16 @@ export class Player extends Sprite {
 
   idle = () => {
     if (!this.lastDirection || this.lastDirection === 'right' ) {
-      if (this.currentSprite !== this.idleImageRight) {
-        this.currentSprite = this.idleImageRight;
+      if (this.currentSprite !== this.idleRightImage) {
+        this.currentSprite = this.idleRightImage;
         this.frameIndex = 0;
         this.frames = sprites.idle.frames;
         this.ticksPerFrame = sprites.idle.ticksPerFrame;
         this.width = this.currentSprite.width / this.frames;
       }
     } else {
-      if (this.currentSprite !== this.idleImageLeft) {
-        this.currentSprite = this.idleImageLeft;
+      if (this.currentSprite !== this.idleLeftImage) {
+        this.currentSprite = this.idleLeftImage;
         this.frameIndex = 0;
         this.frames = sprites.idle.frames;
         this.ticksPerFrame = sprites.idle.ticksPerFrame;
@@ -87,12 +98,43 @@ export class Player extends Sprite {
   }
 
   jump = () => {
-    if (this.currentSprite !== this.jumpImage) {
-      this.currentSprite = this.jumpImage;
-      this.frames = 11;
-      this.frameIndex = 0;
-      this.ticksPerFrame = 2;
-      this.width = this.currentSprite.width / this.frames;
+    if (!this.lastDirection || this.lastDirection === 'right' ) {
+      if (this.currentSprite !== this.jumpRightImage) {
+        this.currentSprite = this.jumpRightImage;
+        this.frameIndex = 0;
+        this.frames = sprites.jump.frames;
+        this.ticksPerFrame = sprites.jump.ticksPerFrame;
+        this.width = this.currentSprite.width / this.frames;
+      }
+    } else {
+      if (this.currentSprite !== this.jumpLeftImage) {
+        this.currentSprite = this.jumpLeftImage;
+        this.frameIndex = 0;
+        this.frames = sprites.jump.frames;
+        this.ticksPerFrame = sprites.jump.ticksPerFrame;
+        this.width = this.currentSprite.width / this.frames;
+      }
     }
+  }
+
+  fall = () => {
+    if (!this.lastDirection || this.lastDirection === 'right' ) {
+      if (this.currentSprite !== this.fallRightImage) {
+        this.currentSprite = this.fallRightImage;
+        this.frameIndex = 0;
+        this.frames = sprites.fall.frames;
+        this.ticksPerFrame = sprites.fall.ticksPerFrame;
+        this.width = this.currentSprite.width / this.frames;
+      }
+    } else {
+      if (this.currentSprite !== this.fallLeftImage) {
+        this.currentSprite = this.fallLeftImage;
+        this.frameIndex = 0;
+        this.frames = sprites.fall.frames;
+        this.ticksPerFrame = sprites.fall.ticksPerFrame;
+        this.width = this.currentSprite.width / this.frames;
+      }
+    }
+
   }
 }
