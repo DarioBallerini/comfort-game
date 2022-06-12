@@ -1,6 +1,9 @@
+import { GenericObject } from "./components/GenericObject/GenericObject";
 import { Player } from "./components/Player/Player";
 
 let player;
+let background = [];
+let clouds = [];
 let context;
 let canvas;
 let keys = {
@@ -9,6 +12,7 @@ let keys = {
   up: false,
   down: false,
 }
+let scrollOffset = 0;
 
 export const init = (images) => {
   canvas = document.querySelector('canvas');
@@ -16,6 +20,15 @@ export const init = (images) => {
   canvas.width = innerWidth;
   canvas.height = innerHeight;
   player = new Player(context, images);
+  background = [
+    new GenericObject({x: 0, y: 0, image: images.sky}, context),
+    new GenericObject({x: 0, y: 0, image: images.rocks1}, context),
+    new GenericObject({x: 0, y: 0, image: images.rocks2}, context)
+  ];
+  clouds = [
+    new GenericObject({x: 0, y: 0, image: images.clouds1}, context),
+    new GenericObject({x: images.clouds1.width, y: 0, image: images.clouds1}, context)
+  ];
   gameLoop();
 };
 
@@ -28,12 +41,12 @@ const moveSprites = () => {
   }
 
   // animate right and left
-  if (keys.right && player.position.x < 450) {
+  if (keys.right && player.position.x < 450 || keys.right && scrollOffset / 4 >= background[0].image.width - canvas.width && player.position.x + player.width * player.scale <= background[0].image.width - (background[0].image.width - canvas.width)) {
     if (player.isColliding) {
       player.run('right');
     }
     player.velocity.x = player.speed;
-  } else if (keys.left && player.position.x > 100) {
+  } else if (keys.left && player.position.x > 100 || keys.left && scrollOffset === 0 && player.position.x > 0) {
     if (player.isColliding) {
       player.run('left');
     }
@@ -44,9 +57,19 @@ const moveSprites = () => {
       if (player.isColliding) {
         player.run('right');
       }
+      if (scrollOffset / 4 < background[0].image.width - canvas.width) {
+        scrollOffset += player.speed;
+        background.forEach(element => element.position.x -= player.speed / 4);
+        clouds.forEach(cloud => cloud.position.x -= player.speed / 3);
+      }
     } else if (keys.left) {
       if (player.isColliding) {
         player.run('left');
+      }
+      if (scrollOffset > 0) {
+        scrollOffset -= player.speed;
+        background.forEach(element => element.position.x += player.speed / 4);
+        clouds.forEach(cloud => cloud.position.x += player.speed / 3);
       }
     }
   }
@@ -72,7 +95,17 @@ const collisionDetection = () => {
 
 const gameLoop = () => {
   window.requestAnimationFrame(gameLoop);
-  context.clearRect(0, 0, canvas.width, canvas.height); //clear the canvas
+  background.forEach(element => element.draw());
+  clouds.forEach(cloud => {
+    cloud.draw();
+    cloud.position.x -= 0.5;
+  });
+  if (clouds[clouds.length- 1].position.x + clouds[0].image.width <= clouds[0].image.width) {
+    clouds.push(new GenericObject({x: clouds[0].image.width, y: 0, image: clouds[0].image}, context));
+    if (clouds.length > 4) {
+      clouds.shift();
+    }
+  }
   moveSprites();
   player.draw();
   player.update();
